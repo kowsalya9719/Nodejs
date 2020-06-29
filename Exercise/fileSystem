@@ -1,0 +1,10 @@
+const os=require("os");
+const fs=require("fs");
+fs.writeFile("test.txt","hi kowsalya",(err)=>{if(err) throw err;
+console.log("success");
+});
+
+fs.readFile("test.txt",'utf8',(err,data)=>{
+if(err) throw err;
+console.log(data);
+})
