@@ -1,0 +1,184 @@
+[{
+  "name" : "Student 1",
+  "age" : 20,
+  "marks" : {
+       "english" : 20,
+       "maths" : 85,
+       "pthysics" : 50,
+       "biology" : 30
+  },
+  "skills" : ["singing","dancing"]
+},
+{
+  "name" : "Student 2",
+  "age" : 20,
+  "marks" : {
+       "english" : 30,
+       "maths" : 55,
+       "pthysics" : 50,
+       "biology" : 30
+  },
+  "skills" : ["singing","dancing"]
+},{
+  "name" : "Student 3",
+  "age" : 20,
+  "marks" : {
+       "english" : 35,
+       "maths" : 55,
+       "pthysics" : 50,
+       "biology" : 30
+  },
+  "skills" : ["singing","dancing"]
+},{
+  "name" : "Student 4",
+  "age" : 20,
+  "marks" : {
+       "english" : 45,
+       "maths" : 90,
+       "pthysics" : 50,
+       "biology" : 30
+  },
+  "skills" : ["singing","dancing"]
+},{
+  "name" : "Student 5",
+  "age" : 20,
+  "marks" : {
+       "english" : 50,
+       "maths" : 50,
+       "pthysics" : 50,
+       "biology" : 30
+  },
+  "skills" : ["singing","dancing"]
+},{
+  "name" : "Student 6",
+  "age" : 20,
+  "marks" : {
+       "english" : 25,
+       "maths" : 10,
+       "pthysics" : 50,
+       "biology" : 30
+  },
+  "skills" : ["singing","dancing"]
+},{
+  "name" : "Student 7",
+  "age" : 20,
+  "marks" : {
+       "english" : 10,
+       "maths" : 65,
+       "pthysics" : 50,
+       "biology" : 30
+  },
+  "skills" : ["singing","dancing"]
+},{
+  "name" : "Student 8",
+  "age" : 20,
+  "marks" : {
+       "english" : 90,
+       "maths" : 50,
+       "pthysics" : 50,
+       "biology" : 30
+  },
+  "skills" : ["singing","dancing"]
+},{
+  "name" : "Student 9",
+  "age" : 20,
+  "marks" : {
+       "english" : 65,
+       "maths" : 45,
+       "pthysics" : 50,
+       "biology" : 30
+  },
+  "skills" : ["singing","dancing"]
+},{
+  "name" : "Student 10",
+  "age" : 20,
+  "marks" : {
+       "english" : 15,
+       "maths" : 20,
+       "pthysics" : 50,
+       "biology" : 30
+  },
+  "skills" : ["singing","dancing"]
+}
+]
+
+
+//answers:
+// Create a collections of 10 students
+use students;
+db.students.insertMany();
+db.students.find();
+
+// Find all students who scored more than 40 Marks in English
+db.students.find( {"marks.english" : { "$gt": 40 } } );
+
+// Find all students who scored less than than 25 Marks in Maths.
+db.students.find( {"marks.maths" : { "$lt": 25 } } );
+
+//Find the average of Student 7
+db.students.aggregate(
+   [
+    {$match:{name:"Student 7"}},
+    {
+       $group: {
+           _id: "$name",
+           avgMark:{$avg: { $avg: [
+                        "$marks.english",
+                        "$marks.maths",
+                        "$marks.pthysics",
+                        "$marks.biology"
+                    ]
+                  }
+            }
+        }
+    }
+]);
+
+// Find the total marks of student 10
+db.students.aggregate(
+   [
+    {$match:{name:"Student 10"}},
+    {
+       $group: {
+           _id: "$name",
+           total:{$sum: { $sum: [
+                        "$marks.english",
+                        "$marks.maths",
+                        "$marks.pthysics",
+                        "$marks.biology"
+                    ]
+                  }
+            }
+        }
+    }
+]);
+
+// Add a skill called "sports" to a Student 5
+db.students.update({"name":"Student 5"},{$push:{skills:"sports"}});
+db.students.find({"name":"Student 5"});
+
+// Remove "dancing" skill from student 3 and Student 4
+db.students.update({"name":"Student 3"},{$pull:{skills:"dancing"}});
+db.students.find({"name":"Student 3"}).pretty();
+db.students.update({"name":"Student 4"},{$pull:{skills:"dancing"}});
+db.students.find({"name":"Student 4"}).pretty();
+
+// Find over all average for all students.
+db.students.aggregate(
+   [
+    {$match:{}},
+    {
+       $group: {
+           _id: "$name",
+           total:{$avg: { $avg: [
+                        "$marks.english",
+                        "$marks.maths",
+                        "$marks.pthysics",
+                        "$marks.biology"
+                    ]
+                  }
+            }
+        }
+    }
+]);
+
