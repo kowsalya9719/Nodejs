@@ -47,8 +47,9 @@ app.delete("/remove/:id", (req, res) => {
       return element;
     }
   })[0];
-
-  studentDetail = filterval;
+ let index=studentDetail.indexof(filterval);
+ studentDetail.splice(index,1);
+  //studentDetail = filterval;
   res.send(studentDetail);
 });
 app.listen(process.env.PORT || port, () => {
